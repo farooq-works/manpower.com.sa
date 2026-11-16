@@ -1,0 +1,29 @@
+{
+  "slug": "our-values",
+  "title": "Our Values",
+  "description": "Our Values",
+  "status": "published",
+  "hero": {
+    "heading": "Our Values",
+    "body": "At Manpower Saudi Arabia, we don’t just believe in helping businesses find the right talents. Rather, we go that extra mile to help businesses nurture and retain their employees for long-term success. Since our beginnings, our mission has been to create a workplace where talents are discovered, developed, and celebrated. For this reason, our suite of workforce solutions is designed to help you manage your workforce more effectively and ensure every team member feels supported and motivated to excel.",
+    "image": "/media/Office-Image-4.png"
+  },
+  "sections": [
+    {
+      "heading": "Our Values",
+      "body": "At Manpower Saudi Arabia, we don’t just believe in helping businesses find the right talents. Rather, we go that extra mile to help businesses nurture and retain their employees for long-term success. Since our beginnings, our mission has been to create a workplace where talents are discovered, developed, and celebrated. For this reason, our suite of workforce solutions is designed to help you manage your workforce more effectively and ensure every team member feels supported and motivated to excel.",
+      "image": "/media/Office-Image-4.png"
+    },
+    {
+      "heading": "We Live By Our Values",
+      "body": "We are passionate about finding you the ideal candidate. We take ownership of the entire recruitment process and candidate migration to meet your needs. Through market mapping and industry knowledge, we know where the top talent you require is to achieve your business objectives. Our inherent values and ethics guide how we run our successful operations and build long-term relationships.\n\nWe care about people and the role of work in their lives. We respect people as individuals, trusting them, supporting them, enabling them to achieve their aims in work and in life. We help people develop their careers through planning, work, coaching and training. We recognize everyone’s contribution to our success - our staff, our clients and our candidates. We encourage and reward achievement.\n\nWe share our knowledge, our expertise and our resources, so that everyone understands what is important now and what’s happening next in the world of work - and knows how best to respond. We actively listen and act upon this information to improve our relationships, solutions and services.\n\nBased on our understanding of the world of work, we actively pursue the development and adoption of the best practices worldwide. We lead in the world of work. We dare to innovate, to pioneer and to evolve. We never accept the status quo. We constantly challenge the norm to find new and better ways of doing things. We thrive on our entrepreneurial spirit and speed of response; taking risks, knowing that we will not always succeed, but never exposing our clients to risk.",
+      "image": ""
+    },
+    {
+      "heading": "Creating Workplaces With Purpose",
+      "body": "Our values are more than just words. They’re the principles that guide us in every solution we offer, ensuring we always put people first. Join us in our journey to build workplaces where people can think big, have fun, and do good, so ultimately, your business can succeed.",
+      "image": ""
+    }
+  ],
+  "updatedAt": "2026-11-12T13:02:05.033Z"
+}

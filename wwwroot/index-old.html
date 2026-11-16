@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Coming soon." />
+  <meta name="theme-color" content="#0b0f14" />
+  <title>Coming Soon</title>
+
+  <style>
+    :root{
+      --bg: #0b0f14;
+      --card: rgba(255,255,255,.06);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.62);
+      --border: rgba(255,255,255,.12);
+      --shadow: 0 20px 70px rgba(0,0,0,.55);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(120,170,255,.22), transparent 55%),
+                  radial-gradient(900px 500px at 90% 20%, rgba(255,120,200,.18), transparent 60%),
+                  radial-gradient(900px 700px at 50% 100%, rgba(120,255,200,.10), transparent 60%),
+                  var(--bg);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .wrap{
+      width: min(720px, 100%);
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .top{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .mark{
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+
+    .mark svg{ opacity: .92; }
+
+    h1{
+      margin: 0;
+      font-size: clamp(28px, 4vw, 42px);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    p{
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .divider{
+      height: 1px;
+      background: var(--border);
+      margin: 18px 0;
+    }
+
+    .meta{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pill{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: rgba(255,255,255,.78);
+      font-size: 13px;
+      user-select: none;
+    }
+
+    .dot{
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #77ffcc;
+      box-shadow: 0 0 0 4px rgba(119,255,204,.12);
+    }
+
+    .footer{
+      margin-top: 14px;
+      color: rgba(255,255,255,.45);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    a{
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,.25);
+    }
+    a:hover{ border-bottom-color: rgba(255,255,255,.55); }
+
+    @media (prefers-reduced-motion: no-preference){
+      .card{ animation: rise .7s ease-out both; }
+      @keyframes rise{
+        from{ transform: translateY(10px); opacity: .0; }
+        to{ transform: translateY(0); opacity: 1; }
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap" role="main">
+    <section class="card" aria-label="Coming soon">
+      <div class="top">
+        <div class="mark" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2.5c5.25 0 9.5 4.25 9.5 9.5s-4.25 9.5-9.5 9.5S2.5 17.25 2.5 12 6.75 2.5 12 2.5Z"
+                  stroke="rgba(255,255,255,.85)" stroke-width="1.6"/>
+            <path d="M12 7v5l3.2 2"
+                  stroke="rgba(255,255,255,.85)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="pill"><span class="dot"></span> Coming soon</div>
+        </div>
+      </div>
+
+      <h1>Website is under construction.</h1>
+      <!-- <p>
+        This site is under construction. We’re polishing the experience and will be live shortly.
+      </p> -->
+
+      <div class="divider"></div>
+
+      <!-- <div class="meta">
+        <div class="pill" title="Status">Status: In progress</div>
+        <div class="pill" title="Contact">
+          Contact: <a href="mailto:hello@example.com">hello@example.com</a>
+        </div>
+      </div> -->
+      <div class="footer">
+        Copyright ©  Manpower 2026 All rights reserved.
+      </div>
+      <!-- <span id="y"></span> -->
+    </section>
+  </main>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

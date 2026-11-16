@@ -1,0 +1,166 @@
+
+
+.wpcf7-not-valid-tip {
+        color: #dc3232;
+        font-size: 1em;
+        font-weight: normal;
+        display: block;
+        margin-top: -10px;
+        margin-bottom: 14px;
+        font-size: 0.9em;
+      }
+      li {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font-size: 100%;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        vertical-align: baseline;
+        background: transparent;
+        display: none;
+      }
+      .screen-reader-response {
+        display: none;
+      }
+
+      .et_pb_blurb_0 .et_pb_main_blurb_image, .et_pb_blurb_1 .et_pb_main_blurb_image, 
+      .et_pb_blurb_2 .et_pb_main_blurb_image, .et_pb_blurb_3 .et_pb_main_blurb_image{
+    width: 35px;}
+
+    .fa-classic, .fa-regular, .fa-solid, .far, .fas {
+    font-family: "Font Awesome 6 Free";
+    font-size: 30px;
+    color: #c25700;
+}
+
+	/* ----------footer css------ */
+
+	.wpcf7 label {
+        margin-top: 10px;
+      }
+      .wpcf7 input,
+      .wpcf7 select,
+      .wpcf7 textarea {
+        margin-bottom: 10px;
+      }
+
+      .wpcf7 button.wpcf7-submit {
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: 700;
+        border: 0;
+        padding: 10px 20px;
+        border-radius: 50px;
+        margin-top: 10px;
+        color: #fff;
+        background-color: #c25700;
+      }
+
+      .wpcf7 button.wpcf7-submit:hover {
+        border: 0;
+      }
+
+      input.wpcf7-form-control.wpcf7-text,
+      .wpcf7 select,
+      textarea.wpcf7-textarea,
+      input.wpcf7-form-control.wpcf7-number {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 0.5em;
+        margin-top: 3px;
+        width: 100%;
+      }
+
+      input.wpcf7-form-control.wpcf7-text:focus,
+      .wpcf7 select:focus,
+      textarea.wpcf7-textarea:focus,
+      input.wpcf7-form-control.wpcf7-number:focus {
+        border: 1px solid #c25700;
+      }
+      textarea.wpcf7-textarea {
+        width: 100%;
+        height: 150px;
+        resize: none;
+      }
+      .wpcf7 form.sent .wpcf7-response-output {
+        border-radius: 0.5em;
+        color: #46b450;
+        padding: 20px;
+        background-color: #ecffee;
+        border: 1px solid #46b450;
+        font-weight: 600;
+      }
+      span.wpcf7-list-item.first {
+        margin-left: 0;
+      }
+      span.wpcf7-list-item-label {
+        font-weight: 500;
+      }
+      span.wpcf7-list-item {
+        margin-top: 5px;
+      }
+
+      .wpcf7 p {
+        padding-bottom: 0;
+      }
+
+      .form-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .form-row {
+        display: flex;
+        flex-direction: column;
+      }
+
+      @media (max-width: 768px) {
+        .form-container {
+          grid-template-columns: 1fr;
+        }
+        .form-container {
+          gap: 0px;
+        }
+      }
+
+      .wpcf7 form.invalid .wpcf7-response-output,
+      .wpcf7 form.unaccepted .wpcf7-response-output,
+      .wpcf7 form.payment-required .wpcf7-response-output {
+        border: 1px solid #46b450;
+        margin: 20px 0;
+        color: #ff9232;
+        border-radius: 0.5em;
+        padding: 20px;
+        font-weight: 600;
+        background-color: #ffe2c8;
+      }
+      .wpcf7 form.failed .wpcf7-response-output,
+      .wpcf7 form.aborted .wpcf7-response-output {
+        border: 1px solid #dc3232;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 0.5em;
+        color: #dc3232;
+        font-weight: 600;
+        background-color: #ffcece;
+      }
+
+      input[type="file"] {
+        opacity: 0;
+        position: absolute;
+        top: -50px;
+        height: 40px;
+      }
+
+      .custom-file-upload {
+        border: 1px solid #ccc;
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 0.5em;
+        cursor: pointer;
+        margin-bottom: 10px;
+      }

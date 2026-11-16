@@ -1,0 +1,29 @@
+{
+  "slug": "job-opportunities",
+  "title": "Job Opportunities",
+  "description": "Find Jobs That Match Your Ambitions",
+  "status": "published",
+  "hero": {
+    "heading": "Find Jobs That Match Your Ambitions",
+    "body": "At Manpower Saudi Arabia, we have consultants who come from all stages of life. So whether you’re a beginner or a seasoned HR professional, join us and take the next step in your career. Enjoy a healthy work/life balance, get ongoing education, support, and access to valuable resources.",
+    "image": "/media/Office-Image-3.png"
+  },
+  "sections": [
+    {
+      "heading": "Find Jobs That Match Your Ambitions",
+      "body": "At Manpower Saudi Arabia, we have consultants who come from all stages of life. So whether you’re a beginner or a seasoned HR professional, join us and take the next step in your career. Enjoy a healthy work/life balance, get ongoing education, support, and access to valuable resources.",
+      "image": "/media/Office-Image-3.png"
+    },
+    {
+      "heading": "Join Manpower Saudi Arabia",
+      "body": "We don’t just build careers we create opportunities for personal and professional growth in an environment that values your contributions. Here’s what makes us an ideal place to work.\n\nWe invest in our people. Your growth and success are equally important to us as our clients. Hence, we make it a priority to nurture your skills, value your ideas, and help you grow in your role. Expect everything from personalized career guidance to training sessions, and continuous support.\n\nWe strive for greatness in everything we do. At Manpower Saudi Arabia, we consider excellence the standard and collaboration the key to driving success. So, you will be working alongside industry leaders in a supportive environment that encourages innovation and teamwork.\n\nAt Manpower Saudi Arabia, we work towards the single goal of leading the way in talent management, and we know that it isn’t possible without our people. For this reason, we are constantly working on creating a workplace where everyone can achieve their full potential.\n\nWe value your ideas, creativity, and initiative, and believe they are necessary to meet the evolving needs of our clients. So, if you’re a person who loves to think big and make an impact, you will find a home here for your entrepreneurial spirit.\n\nAs part of our team, you’ll experience a dynamic workplace that’s constantly evolving to meet new challenges, or what we consider opportunities. Together, we will shape the future of employee management with flexible, forward-thinking solutions.\n\nIntegrity, teamwork, and a passion for excellence form our core values and define who we are and how we work. By joining us, you’ll be part of an organization that truly values your expertise, knowledge, and contributions.",
+      "image": "/media/Empower-Talent.svg"
+    },
+    {
+      "heading": "Ready to Build Your Career with Us?",
+      "body": "At Manpower Saudi Arabia, we champion a flexible and inclusive work environment. No matter where you are, you can join our distributed team and grow with an organization that values excellence, innovation, and your unique potential.",
+      "image": ""
+    }
+  ],
+  "updatedAt": "2026-11-12T13:02:05.003Z"
+}

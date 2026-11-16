@@ -1,0 +1,11 @@
+@if (loading) {
+  <div class="legacy-loading" aria-live="polite">Loading…</div>
+} @else if (notFound || loadError) {
+  <section class="legacy-error">
+    <h1>{{ loadError ? 'Page unavailable' : 'Page not found' }}</h1>
+    <p>{{ loadError || 'This page does not exist.' }}</p>
+    <a href="/">Return to home</a>
+  </section>
+} @else {
+  <div #legacyContent class="legacy-content"></div>
+}

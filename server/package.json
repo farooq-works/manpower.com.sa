@@ -1,0 +1,25 @@
+{
+  "name": "@manpower/server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "create-admin": "node scripts/create-admin.js",
+    "migrate:static": "node scripts/import-static-pages.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "file-type": "^21.0.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
+    "cheerio": "^1.1.2"
+  }
+}

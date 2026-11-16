@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "dev",
+      "label": "CMS: Start full stack",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "manpower-cms",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "^> dev$"
+          },
+          "endsPattern": {
+            "regexp": "http://localhost:4200/"
+          }
+        }
+      }
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "label": "CMS: Build frontend",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "type": "npm",
+      "script": "test",
+      "label": "CMS: Run tests",
+      "problemMatcher": [],
+      "group": "test"
+    },
+    {
+      "type": "npm",
+      "script": "migrate:static",
+      "label": "CMS: Import static pages",
+      "problemMatcher": []
+    }
+  ]
+}

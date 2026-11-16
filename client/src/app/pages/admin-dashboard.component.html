@@ -1,0 +1,117 @@
+<section class="mx-auto max-w-7xl px-6 py-10">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-wide text-red-700">Content management</p>
+      <h1 class="mt-1 text-3xl font-bold">Pages</h1>
+    </div>
+    <button class="rounded border border-gray-300 px-4 py-2 font-semibold hover:bg-white" (click)="logout()">
+      Sign out
+    </button>
+  </div>
+
+  @if (message) {
+    <p class="mt-4 text-sm text-green-700" role="status">{{ message }}</p>
+  }
+  @if (error) {
+    <p class="mt-4 text-sm text-red-700" role="alert">{{ error }}</p>
+  }
+
+  <div class="mt-8 grid gap-8 lg:grid-cols-[16rem_minmax(0,1fr)]">
+    <aside class="rounded-lg border border-gray-200 bg-white p-4">
+      <h2 class="mb-3 font-bold">Site pages</h2>
+      <div class="mb-4 space-y-2 border-b border-gray-200 pb-4">
+        <input class="w-full rounded border border-gray-300 px-3 py-2 text-sm" name="newPageSlug" placeholder="new-page-slug" [(ngModel)]="newPageSlug" />
+        <input class="w-full rounded border border-gray-300 px-3 py-2 text-sm" name="newPageTitle" placeholder="Page title" [(ngModel)]="newPageTitle" />
+        <button class="w-full rounded bg-red-700 px-3 py-2 text-sm font-semibold text-white" (click)="createPage()">Create draft page</button>
+      </div>
+      <div class="space-y-1">
+        @for (page of pages; track page.slug) {
+          <button
+            class="block w-full rounded px-3 py-2 text-left text-sm hover:bg-gray-100"
+            [class.bg-red-50]="selected?.slug === page.slug"
+            [class.font-semibold]="selected?.slug === page.slug"
+            (click)="edit(page.slug)"
+          >
+            {{ page.title }}
+            @if (page.status === 'draft') {
+              <span class="ml-1 text-xs text-amber-700">(draft)</span>
+            }
+          </button>
+        }
+      </div>
+    </aside>
+
+    @if (selected) {
+      <div class="space-y-6 rounded-lg border border-gray-200 bg-white p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-xl font-bold">Edit {{ selected.slug }}</h2>
+          <label class="text-sm font-semibold">
+            Status
+            <select class="ml-2 rounded border border-gray-300 px-3 py-2" name="status" [(ngModel)]="selected.status">
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="block text-sm font-semibold">
+          Page title
+          <input class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" name="title" [(ngModel)]="selected.title" />
+        </label>
+        <label class="block text-sm font-semibold">
+          Meta description
+          <textarea class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" rows="2" name="description" [(ngModel)]="selected.description"></textarea>
+        </label>
+
+        <fieldset class="space-y-4 rounded border border-gray-200 p-4">
+          <legend class="px-2 font-bold">Hero section</legend>
+          <label class="block text-sm font-semibold">
+            Heading
+            <input class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" name="heroHeading" [(ngModel)]="selected.hero.heading" />
+          </label>
+          <label class="block text-sm font-semibold">
+            Text
+            <textarea class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" rows="4" name="heroBody" [(ngModel)]="selected.hero.body"></textarea>
+          </label>
+          <label class="block text-sm font-semibold">
+            Image URL
+            <input class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" name="heroImage" [(ngModel)]="selected.hero.image" />
+          </label>
+          <label class="inline-flex cursor-pointer items-center rounded border border-gray-300 px-4 py-2 text-sm font-semibold hover:bg-gray-50">
+            {{ uploading ? 'Uploading…' : 'Upload hero image' }}
+            <input class="sr-only" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" [disabled]="uploading" (change)="uploadImage($event)" />
+          </label>
+          @if (selected.hero.image) {
+            <img [src]="selected.hero.image" alt="Selected hero" class="max-h-48 rounded object-cover" />
+          }
+        </fieldset>
+
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold">Content sections</h3>
+            <button class="rounded border border-gray-300 px-3 py-2 text-sm font-semibold hover:bg-gray-50" (click)="addSection()">Add section</button>
+          </div>
+          @for (section of selected.sections; track $index) {
+            <fieldset class="space-y-3 rounded border border-gray-200 p-4">
+              <div class="flex items-center justify-between">
+                <legend class="font-semibold">Section {{ $index + 1 }}</legend>
+                <button class="text-sm text-red-700 hover:underline" (click)="removeSection($index)">Remove</button>
+              </div>
+              <input class="w-full rounded border border-gray-300 px-3 py-2" [name]="'sectionHeading' + $index" placeholder="Heading" [(ngModel)]="section.heading" />
+              <textarea class="w-full rounded border border-gray-300 px-3 py-2" rows="4" [name]="'sectionBody' + $index" placeholder="Text" [(ngModel)]="section.body"></textarea>
+              <input class="w-full rounded border border-gray-300 px-3 py-2" [name]="'sectionImage' + $index" placeholder="Image URL (optional)" [(ngModel)]="section.image" />
+            </fieldset>
+          }
+        </div>
+
+        <button class="rounded bg-red-700 px-5 py-3 font-semibold text-white disabled:opacity-60" [disabled]="saving || uploading" (click)="save()">
+          {{ saving ? 'Saving…' : 'Save page' }}
+        </button>
+      </div>
+    } @else {
+      <div class="rounded-lg border border-dashed border-gray-300 p-10 text-center text-gray-500">
+        Select a page to edit.
+      </div>
+    }
+  </div>
+</section>

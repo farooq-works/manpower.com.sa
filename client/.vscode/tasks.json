@@ -1,0 +1,49 @@
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "..\\package.json",
+      "label": "CMS: Start full stack",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "manpower-cms",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "^> dev$"
+          },
+          "endsPattern": {
+            "regexp": "http://localhost:4200/"
+          }
+        }
+      }
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "path": "..\\package.json",
+      "label": "CMS: Build frontend",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "test",
+      "path": "..\\package.json",
+      "label": "CMS: Run tests",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "migrate:static",
+      "path": "..\\package.json",
+      "label": "CMS: Import static pages",
+      "problemMatcher": []
+    }
+  ]
+}

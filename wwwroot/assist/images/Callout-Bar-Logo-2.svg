@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="554.973" height="492.012" viewBox="0 0 554.973 492.012">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="0.631" stop-color="#fff" stop-opacity="0.592"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0.424"/>
+    </linearGradient>
+  </defs>
+  <g id="Synbol_2" data-name="Synbol 2" transform="translate(-309.939)" opacity="0.125">
+    <path id="SHAPE_1" data-name="SHAPE 1" d="M242.811,494.67c-9.442,25.543-38.093,38.723-63.99,29.407h0c-25.819-9.31-39.215-37.619-29.767-63.157l88.01-238.84c9.442-25.544,38.063-38.747,63.954-29.473h0c25.819,9.323,39.2,37.559,29.8,63.114Z" transform="translate(531.087 -189.641)" fill="url(#linear-gradient)"/>
+    <path id="SHAPE_3" data-name="SHAPE 3" d="M181.566,548.893c-9.406,25.586-38.009,38.759-63.912,29.49h0c-25.879-9.358-39.275-37.613-29.785-63.15L188.506,242.152c9.46-25.591,38-38.759,63.906-29.467h0a49.043,49.043,0,0,1,29.809,63.132Z" transform="translate(225.122 -89.34)" fill="url(#linear-gradient)"/>
+    <path id="SHAPE_2" data-name="SHAPE 2" d="M207.413,649.2c-9.46,25.586-38.069,38.759-63.972,29.491h0c-25.879-9.358-39.245-37.613-29.749-63.151L258.686,222.08c9.406-25.544,38.033-38.747,63.918-29.473h0c25.861,9.323,39.251,37.559,29.844,63.114Z" transform="translate(354.178 -189.641)" fill="url(#linear-gradient)"/>
+  </g>
+</svg>

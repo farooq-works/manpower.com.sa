@@ -1,0 +1,24 @@
+{
+  "slug": "contact-us",
+  "title": "Contact us",
+  "description": "Connect With Us",
+  "status": "published",
+  "hero": {
+    "heading": "Connect With Us",
+    "body": "We have been helping countless businesses from across Saudi Arabia navigate the complexities of HR. Here’s how we can make workforce management easier for you. Managing your employees is a rewarding, but also a challenging aspect of running a business.",
+    "image": "/media/Office-Image-5.png"
+  },
+  "sections": [
+    {
+      "heading": "Connect With Us",
+      "body": "We have been helping countless businesses from across Saudi Arabia navigate the complexities of HR. Here’s how we can make workforce management easier for you. Managing your employees is a rewarding, but also a challenging aspect of running a business.",
+      "image": "/media/Office-Image-5.png"
+    },
+    {
+      "heading": "Our Contact Details",
+      "body": "info@manpower.com.sa\n\n+966 599911106\n\nOffice Address: Alyasamin Dist. Olaya Street, Maharah Tower, 4th Floor Riyadh - Saudi Arabia\n\nSend us a Message",
+      "image": ""
+    }
+  ],
+  "updatedAt": "2026-11-12T13:02:04.970Z"
+}

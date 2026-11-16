@@ -1,0 +1,19 @@
+{
+  "slug": "2026-global-talen-survey",
+  "title": "2026 Global Talent Survey",
+  "description": "2026 Global Talent Survey",
+  "status": "published",
+  "hero": {
+    "heading": "2026 Global Talent Survey",
+    "body": "Mar 3, 2026 | Reports & Market Updates",
+    "image": ""
+  },
+  "sections": [
+    {
+      "heading": "Key Findings",
+      "body": "In 2026, the global talent shortage remains a critical challenge, with 72% of employers worldwide reporting difficulty filling roles. While this represents a modest improvement from the previous year, scarcity continues to impact nearly all sectors, particularly in Information Technology and Healthcare. Employers are increasingly prioritizing AI-related skills and internal development to navigate these gaps, with a significant focus on upskilling current staff to meet evolving technical demands.\n\nRegional Variations: Talent scarcity is most acute in Slovakia (87%), Greece (84%), and Japan (84%), while employers in China (48%) report the least difficulty.\n\nIn-Demand Skills: The most difficult hard skills to find are AI Model & Application Development and AI Literacy. The most valued soft skill is Communication, Collaboration, & Teamwork.\n\nImpact by Industry: Globally, the Information sector (75%) and Hospitality (74%) face the highest levels of scarcity.\n\nStrategic Responses: The primary action taken by employers to overcome scarcity is upskilling and reskilling their current workforce (27% globally; 30% in APME).\n\nCompany Size: Large organizations are struggling the most; businesses with 5,000+ employees report the highest level of difficulty at 74%.",
+      "image": "/media/2026-Global-Talent-Survey.jpg"
+    }
+  ],
+  "updatedAt": "2026-11-12T13:02:04.926Z"
+}

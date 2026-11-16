@@ -1,0 +1,29 @@
+{
+  "slug": "our-story-history",
+  "title": "Our Story History",
+  "description": "Our Journey",
+  "status": "published",
+  "hero": {
+    "heading": "Our Journey",
+    "body": "Our solutions ensured businesses received the support necessary for filling positions and candidates for building careers, an equation that contributed to sustained growth for everyone involved.As the employment landscape underwent significant transformations, so did our offerings. We adopted a more tech-forward approach, which set the stage for Manpower to become a global force in talent resourcing.",
+    "image": "/media/Office-Image-5.png"
+  },
+  "sections": [
+    {
+      "heading": "Our Journey",
+      "body": "Our solutions ensured businesses received the support necessary for filling positions and candidates for building careers, an equation that contributed to sustained growth for everyone involved. As the employment landscape underwent significant transformations, so did our offerings. We adopted a more tech-forward approach, which set the stage for Manpower to become a global force in talent resourcing.",
+      "image": "/media/Office-Image-5.png"
+    },
+    {
+      "heading": "Connecting People With Meaningful Work Across The Globe",
+      "body": "Driven by our commitment to excellence, we took a bold step in Nov 2025. Recognizing the increasing demand for reliable staffing and recruitment services, we partnered with ManpowerGroup and secured the license rights to operate under the Manpower brand in Saudi Arabia.\n\nThis strategic move has allowed us to combine our deep understanding of the local market with the global expertise of a world-renowned workforce solutions provider. Our partnership has also enhanced our ability to offer cutting-edge staffing and recruitment services while maintaining the agility and personalized approach that define Manpower.\n\nThe Best Is Yet To Come!\n\nFor decades, Manpower Saudi Arabia has been working with the mission of empowering businesses and their employees. This journey, marked by continuous innovation has helped us evolve into a beacon of excellence in workforce management and talent resourcing. We combine decades of global experience with a deep understanding of local needs to offer a wide array of solutions, ranging from staffing and hiring to outsourcing, career management, and outplacement services. These offerings undergo continuous updates and modifications to ensure they meet the evolving market demands.",
+      "image": "/media/Request-Service-team-2.png"
+    },
+    {
+      "heading": "Searching for the right talent?",
+      "body": "In a diverse talent landscape, pinpointing the ideal candidate can be a challenge. With Manpower, it becomes a seamless endeavor. Drawing from our rich legacy, we understand the specific nuances of your hiring needs.",
+      "image": ""
+    }
+  ],
+  "updatedAt": "2026-11-12T13:02:05.028Z"
+}

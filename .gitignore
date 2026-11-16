@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+server/data/users.json
+server/uploads/
+client/.angular/
+client/coverage/
+client/public/legacy/
+client/public/assist/

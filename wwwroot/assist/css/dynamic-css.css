@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@font-face {
+    font-family: "Inter", sans-serif;
+    font-display: swap;
+    src: local('ETmodules'), /* Check if font is installed locally first */
+         url('/assist/fonts/modules.woff2') format('woff2'), /* Add WOFF2 for modern browsers */
+         url('/assist/fonts/modules.woff') format('woff'),
+         url('/assist/fonts/modules.ttf') format('truetype'),
+         url('/assist/fonts/modules.eot?#iefix') format('embedded-opentype'),
+         url('/assist/fonts/modules.svg#ETmodules') format('svg');
+    font-weight: 400;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: optimizeLegibility;
+}
+.et_pb_number_counter {
+    word-wrap: break-word;
+    margin: 0 auto 30px;
+    position: relative;
+    text-align: center;
+}
+.et_pb_number_counter .percent {
+    z-index: 2;
+}
+.et_pb_number_counter h3 {
+    font-size: 18px;
+    position: relative;
+}
+.et_pb_number_counter .et_pb_module_header {
+    position: relative;
+}
+.et_pb_number_counter {
+    opacity: 0;
+    -webkit-transition: opacity 1s;
+    transition: opacity 1s;
+}
+.et_pb_number_counter.active {
+    opacity: 1;
+}
+.et_pb_number_counter {
+    width: auto;
+}
+.et_pb_number_counter canvas {
+    display: none;
+    visibility: hidden;
+}
+.et_pb_number_counter .percent {
+    height: 72px;
+    position: relative;
+}
+.et_pb_number_counter .percent p {
+    font-size: 72px;
+    line-height: 72px;
+    font-weight: 500;
+}
+.et_pb_number_counter.et_pb_with_title .percent {
+    margin-bottom: 20px;
+}
+@media (min-width:981px) and (max-width:1100px) {
+    .et_pb_column_1_4 .et_pb_number_counter .percent, .et_pb_column_1_5 .et_pb_number_counter .percent, .et_pb_column_1_6 .et_pb_number_counter .percent {
+    height: 55px;
+}
+.et_pb_column_1_4 .et_pb_number_counter h3, .et_pb_column_1_5 .et_pb_number_counter h3, .et_pb_column_1_6 .et_pb_number_counter h3 {
+    padding: 10px 0 0;
+}
+}
