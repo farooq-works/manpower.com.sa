@@ -24,6 +24,6 @@ try {
 }
 
 await mkdir(path.dirname(usersFile), { recursive: true });
-const user = { email, passwordHash: await bcrypt.hash(password, 12) };
+const user = { email, role: 'super-admin', passwordHash: await bcrypt.hash(password, 12) };
 await writeFile(usersFile, `${JSON.stringify([user], null, 2)}\n`, { flag: 'wx', mode: 0o600 });
 console.log(`Created admin account for ${email}. Remove ADMIN_PASSWORD from .env when setup is complete.`);

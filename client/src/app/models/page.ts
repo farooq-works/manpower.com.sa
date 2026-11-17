@@ -14,15 +14,22 @@ export interface SitePage {
     body: string;
     image: string;
   };
+  pdf?: string;
   sections: PageSection[];
   updatedAt?: string;
 }
 
 export interface AdminUser {
   email: string;
+  role: 'super-admin' | 'editor';
 }
 
 export interface UploadedMedia {
   name: string;
   url: string;
+}
+
+export interface ManagedUser {
+  email: string;
+  role: 'super-admin' | 'editor';
 }

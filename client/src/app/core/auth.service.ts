@@ -15,6 +15,10 @@ export class AuthService {
     );
   }
 
+  changePassword(currentPassword: string, newPassword: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>('/api/auth/password', { currentPassword, newPassword }, { withCredentials: true });
+  }
+
   me(): Observable<AdminUser> {
     return this.http.get<AdminUser>('/api/auth/me', { withCredentials: true });
   }

@@ -9,6 +9,10 @@
     </button>
   </div>
 
+  @if (currentUser) {
+    <p class="mt-2 text-sm text-gray-600">Signed in as {{ currentUser.email }} ({{ currentUser.role }})</p>
+  }
+
   @if (message) {
     <p class="mt-4 text-sm text-green-700" role="status">{{ message }}</p>
   }
@@ -58,6 +62,21 @@
           Page title
           <input class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" name="title" [(ngModel)]="selected.title" />
         </label>
+
+        <fieldset class="space-y-3 rounded border border-gray-200 p-4">
+          <legend class="px-2 font-bold">Report PDF</legend>
+          <label class="block text-sm font-semibold">
+            PDF URL
+            <input class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" name="pdf" placeholder="/reports/report.pdf" [(ngModel)]="selected.pdf" />
+          </label>
+          <label class="inline-flex cursor-pointer items-center rounded border border-gray-300 px-4 py-2 text-sm font-semibold hover:bg-gray-50">
+            {{ uploading ? 'Uploading…' : 'Upload or replace PDF' }}
+            <input class="sr-only" type="file" accept="application/pdf" [disabled]="uploading" (change)="uploadPdf($event)" />
+          </label>
+          @if (selected.pdf) {
+            <a class="block text-sm text-red-700 underline" [href]="selected.pdf" target="_blank" rel="noreferrer">Open current PDF</a>
+          }
+        </fieldset>
         <label class="block text-sm font-semibold">
           Meta description
           <textarea class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" rows="2" name="description" [(ngModel)]="selected.description"></textarea>
@@ -100,18 +119,73 @@
               <input class="w-full rounded border border-gray-300 px-3 py-2" [name]="'sectionHeading' + $index" placeholder="Heading" [(ngModel)]="section.heading" />
               <textarea class="w-full rounded border border-gray-300 px-3 py-2" rows="4" [name]="'sectionBody' + $index" placeholder="Text" [(ngModel)]="section.body"></textarea>
               <input class="w-full rounded border border-gray-300 px-3 py-2" [name]="'sectionImage' + $index" placeholder="Image URL (optional)" [(ngModel)]="section.image" />
+              <label class="inline-flex cursor-pointer items-center rounded border border-gray-300 px-3 py-2 text-sm font-semibold hover:bg-gray-50">
+                Upload section image
+                <input class="sr-only" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" [disabled]="uploading" (change)="uploadImage($event, $index)" />
+              </label>
+              @if (section.image) {
+                <img [src]="section.image" alt="Section image" class="max-h-40 rounded object-cover" />
+              }
             </fieldset>
           }
         </div>
 
-        <button class="rounded bg-red-700 px-5 py-3 font-semibold text-white disabled:opacity-60" [disabled]="saving || uploading" (click)="save()">
+        <div class="flex flex-wrap gap-3">
+          <button class="rounded bg-red-700 px-5 py-3 font-semibold text-white disabled:opacity-60" [disabled]="saving || uploading" (click)="save()">
           {{ saving ? 'Saving…' : 'Save page' }}
-        </button>
+          </button>
+          <button class="rounded border border-gray-300 px-4 py-3 font-semibold" (click)="deleteSelected()">Delete page</button>
+        </div>
+
+        <fieldset class="space-y-3 rounded border border-gray-200 p-4">
+          <legend class="px-2 font-bold">Duplicate page</legend>
+          <div class="grid gap-3 md:grid-cols-2">
+            <input class="rounded border border-gray-300 px-3 py-2" name="duplicateSlug" placeholder="new-page-slug" [(ngModel)]="duplicateSlug" />
+            <input class="rounded border border-gray-300 px-3 py-2" name="duplicateTitle" placeholder="New page title (optional)" [(ngModel)]="duplicateTitle" />
+          </div>
+          <button class="rounded border border-gray-300 px-4 py-2 font-semibold" (click)="duplicate()">Create duplicate draft</button>
+        </fieldset>
       </div>
     } @else {
       <div class="rounded-lg border border-dashed border-gray-300 p-10 text-center text-gray-500">
         Select a page to edit.
       </div>
+    }
+  </div>
+
+  <div class="mt-8 grid gap-8 lg:grid-cols-2">
+    <fieldset class="rounded-lg border border-gray-200 bg-white p-6">
+      <legend class="px-2 text-lg font-bold">Change my password</legend>
+      <div class="space-y-3">
+        <input class="w-full rounded border border-gray-300 px-3 py-2" type="password" name="currentPassword" placeholder="Current password" [(ngModel)]="currentPassword" />
+        <input class="w-full rounded border border-gray-300 px-3 py-2" type="password" name="newPassword" placeholder="New password (12+ characters)" [(ngModel)]="newPassword" />
+        <button class="rounded bg-red-700 px-4 py-2 font-semibold text-white" (click)="changePassword()">Change password</button>
+      </div>
+    </fieldset>
+
+    @if (currentUser?.role === 'super-admin') {
+      <fieldset class="rounded-lg border border-gray-200 bg-white p-6">
+        <legend class="px-2 text-lg font-bold">CMS users</legend>
+        <div class="space-y-3">
+          <input class="w-full rounded border border-gray-300 px-3 py-2" type="email" name="newUserEmail" placeholder="user@example.com" [(ngModel)]="newUserEmail" />
+          <input class="w-full rounded border border-gray-300 px-3 py-2" type="password" name="newUserPassword" placeholder="Temporary password (12+ characters)" [(ngModel)]="newUserPassword" />
+          <select class="w-full rounded border border-gray-300 px-3 py-2" name="newUserRole" [(ngModel)]="newUserRole">
+            <option value="editor">Editor</option>
+            <option value="super-admin">Super admin</option>
+          </select>
+          <button class="rounded bg-red-700 px-4 py-2 font-semibold text-white" (click)="addUser()">Add CMS user</button>
+        </div>
+        <div class="mt-5 space-y-2">
+          @for (user of users; track user.email) {
+            <div class="flex items-center justify-between rounded border border-gray-100 px-3 py-2 text-sm">
+              <span>{{ user.email }} <span class="text-gray-500">({{ user.role }})</span></span>
+              @if (user.email !== currentUser?.email) {
+                <button class="text-red-700 hover:underline" (click)="removeUser(user)">Remove</button>
+              }
+            </div>
+          }
+        </div>
+      </fieldset>
     }
   </div>
 </section>

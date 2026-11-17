@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../core/auth.service';
 import { PageApi } from '../core/page-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SitePage, UploadedMedia } from '../models/page';
+import { AdminUser, ManagedUser, SitePage, UploadedMedia } from '../models/page';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -25,9 +25,29 @@ export class AdminDashboardComponent implements OnInit {
   error = '';
   saving = false;
   uploading = false;
+  currentUser: AdminUser | null = null;
+  users: ManagedUser[] = [];
+  newUserEmail = '';
+  newUserPassword = '';
+  newUserRole: ManagedUser['role'] = 'editor';
+  duplicateSlug = '';
+  duplicateTitle = '';
+  currentPassword = '';
+  newPassword = '';
 
   ngOnInit(): void {
+    this.auth.me().subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        if (user.role === 'super-admin') this.loadUsers();
+        this.changeDetector.markForCheck();
+      },
+    });
     this.loadPages();
+  }
+
+  loadUsers(): void {
+    this.api.getUsers().subscribe({ next: (users) => { this.users = users; this.changeDetector.markForCheck(); } });
   }
 
   loadPages(): void {
@@ -66,6 +86,7 @@ export class AdminDashboardComponent implements OnInit {
       description: '',
       status: 'draft',
       hero: { heading: title, body: '', image: '' },
+      pdf: '',
       sections: [],
     };
     this.error = '';
@@ -93,7 +114,7 @@ export class AdminDashboardComponent implements OnInit {
     this.selected?.sections.splice(index, 1);
   }
 
-  uploadImage(event: Event): void {
+  uploadImage(event: Event, sectionIndex: number | null = null): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
@@ -102,7 +123,10 @@ export class AdminDashboardComponent implements OnInit {
     this.error = '';
     this.api.uploadImage(file).subscribe({
       next: (media: UploadedMedia) => {
-        if (this.selected) this.selected.hero.image = media.url;
+        if (this.selected) {
+          if (sectionIndex === null) this.selected.hero.image = media.url;
+          else this.selected.sections[sectionIndex].image = media.url;
+        }
         this.uploading = false;
         input.value = '';
         this.changeDetector.markForCheck();
@@ -113,6 +137,73 @@ export class AdminDashboardComponent implements OnInit {
         input.value = '';
         this.changeDetector.markForCheck();
       },
+    });
+  }
+
+  uploadPdf(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    this.uploading = true;
+    this.api.uploadReport(file).subscribe({
+      next: (report) => {
+        if (this.selected) this.selected.pdf = report.url;
+        this.uploading = false;
+        input.value = '';
+        this.changeDetector.markForCheck();
+      },
+      error: (error: HttpErrorResponse) => {
+        this.error = error.error?.error ?? 'PDF upload failed. Use a PDF under 25 MB.';
+        this.uploading = false;
+        input.value = '';
+        this.changeDetector.markForCheck();
+      },
+    });
+  }
+
+  duplicate(): void {
+    if (!this.selected || !this.duplicateSlug.trim()) { this.error = 'Enter a slug for the duplicate page.'; return; }
+    this.api.duplicatePage(this.selected.slug, this.duplicateSlug.trim().toLowerCase(), this.duplicateTitle.trim()).subscribe({
+      next: (page) => {
+        this.pages = [...this.pages, page].sort((left, right) => left.title.localeCompare(right.title));
+        this.selected = structuredClone(page);
+        this.duplicateSlug = '';
+        this.duplicateTitle = '';
+        this.message = 'Page duplicated as a draft.';
+        this.changeDetector.markForCheck();
+      },
+      error: (error: HttpErrorResponse) => { this.error = error.error?.error ?? 'Page could not be duplicated.'; this.changeDetector.markForCheck(); },
+    });
+  }
+
+  deleteSelected(): void {
+    if (!this.selected || !confirm(`Delete ${this.selected.title}? This can be recovered from revisions, but the page will be removed.`)) return;
+    const slug = this.selected.slug;
+    this.api.deletePage(slug).subscribe({
+      next: () => { this.pages = this.pages.filter((page) => page.slug !== slug); this.selected = null; this.message = 'Page deleted.'; this.changeDetector.markForCheck(); },
+      error: (error: HttpErrorResponse) => { this.error = error.error?.error ?? 'Page could not be deleted.'; this.changeDetector.markForCheck(); },
+    });
+  }
+
+  changePassword(): void {
+    this.auth.changePassword(this.currentPassword, this.newPassword).subscribe({
+      next: () => { this.currentPassword = ''; this.newPassword = ''; this.message = 'Your password was changed.'; this.changeDetector.markForCheck(); },
+      error: (error: HttpErrorResponse) => { this.error = error.error?.error ?? 'Password could not be changed.'; this.changeDetector.markForCheck(); },
+    });
+  }
+
+  addUser(): void {
+    this.api.createUser(this.newUserEmail, this.newUserPassword, this.newUserRole).subscribe({
+      next: (user) => { this.users = [...this.users, user].sort((left, right) => left.email.localeCompare(right.email)); this.newUserEmail = ''; this.newUserPassword = ''; this.message = 'User added.'; this.changeDetector.markForCheck(); },
+      error: (error: HttpErrorResponse) => { this.error = error.error?.error ?? 'User could not be added.'; this.changeDetector.markForCheck(); },
+    });
+  }
+
+  removeUser(user: ManagedUser): void {
+    if (!confirm(`Remove ${user.email} from CMS access?`)) return;
+    this.api.deleteUser(user.email).subscribe({
+      next: () => { this.users = this.users.filter((entry) => entry.email !== user.email); this.message = 'User removed.'; this.changeDetector.markForCheck(); },
+      error: (error: HttpErrorResponse) => { this.error = error.error?.error ?? 'User could not be removed.'; this.changeDetector.markForCheck(); },
     });
   }
 

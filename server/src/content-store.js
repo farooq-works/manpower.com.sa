@@ -64,6 +64,11 @@ export function validatePage(slug, input) {
     throw new Error('Invalid hero image');
   }
 
+  const pdf = assertText(input.pdf ?? '', 'page PDF', 500, true);
+  if (pdf && !pdf.startsWith('/reports/')) {
+    throw new Error('Invalid page PDF');
+  }
+
   return {
     slug,
     title: assertText(input.title, 'title', 160),
@@ -74,9 +79,31 @@ export function validatePage(slug, input) {
       body: assertText(hero.body ?? '', 'hero body', 4000, true),
       image: heroImage,
     },
+    pdf,
     sections,
     updatedAt: new Date().toISOString(),
   };
+}
+
+export function deletePage(slug) {
+  const operation = writes.then(async () => {
+    if (!isValidSlug(slug)) throw new Error('Invalid page slug');
+    const destination = path.join(pagesDirectory, `${slug}.json`);
+    await backupExistingPage(slug);
+    try {
+      await unlink(destination);
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        const missing = new Error('Page not found');
+        missing.status = 404;
+        throw missing;
+      }
+      throw error;
+    }
+    return true;
+  });
+  writes = operation.catch(() => {});
+  return operation;
 }
 
 async function readJson(filePath) {
