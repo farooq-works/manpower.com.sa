@@ -82,7 +82,7 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
         this.loading = true;
         this.notFound = false;
         this.loadError = '';
-        return this.http.get(`/legacy/${encodeURIComponent(filename)}`, { responseType: 'text' }).pipe(
+        return this.http.get(this.siteUrl(`legacy/${encodeURIComponent(filename)}`), { responseType: 'text' }).pipe(
           catchError((error: { status?: number }) => {
             if (error.status === 404) this.notFound = true;
             else this.loadError = 'Unable to load this page. Please try again later.';
@@ -99,15 +99,15 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
       this.inlineStyles = [...parsed.querySelectorAll('style')]
         .map((style) => style.textContent ?? '')
         .filter(Boolean)
-        .map((style) => style.replaceAll('./assist/', '/legacy/assist/').replaceAll('url(assist/', 'url(/legacy/assist/'));
+        .map((style) => style.replaceAll('./assist/', 'legacy/assist/').replaceAll('url(assist/', 'url(legacy/assist/'));
       this.stylesheetHrefs = [...parsed.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"], link[rel="preload"][as="style"]')]
         .map((link) => link.getAttribute('href') ?? '')
         .filter(Boolean)
-        .map((href) => href.startsWith('./assist/') ? `/legacy/${href.slice(2)}` : href.startsWith('assist/') ? `/legacy/${href}` : href);
+        .map((href) => href.startsWith('./assist/') ? this.siteUrl(`legacy/${href.slice(2)}`) : href.startsWith('assist/') ? this.siteUrl(`legacy/${href}`) : href);
       this.scriptEntries = [...parsed.querySelectorAll<HTMLScriptElement>('script')]
         .map((script) => {
           const source = script.getAttribute('src');
-          if (source) return source.startsWith('http') ? {} : { src: `/legacy/${source.replace(/^\.?\//, '')}` };
+          if (source) return source.startsWith('http') ? {} : { src: this.siteUrl(`legacy/${source.replace(/^\.?\//, '')}`) };
           return script.textContent?.trim() ? { code: script.textContent } : {};
         })
         .filter((entry) => entry.src || entry.code);
@@ -121,15 +121,20 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
         for (const attribute of ['src', 'href', 'srcset']) {
           const value = element.getAttribute(attribute);
           if (!value) continue;
-          const assetPath = value.startsWith('./assist/') ? `/legacy/${value.slice(2)}` : value.startsWith('assist/') ? `/legacy/${value}` : value;
+          const assetPath = value.startsWith('./assist/') ? `legacy/${value.slice(2)}` : value.startsWith('assist/') ? `legacy/${value}` : value;
           let normalized = assetPath
             .replaceAll('/2026-Global-Talent-Survey.avif', '/2026-Global-Talent-Survey.jpg')
             .replaceAll('/The-Human-Edge-1080x675.png.avif', '/The-Human-Edge-1080x675.jpg');
-          if (attribute === 'src' && IMAGE_FALLBACKS[assetPath]) normalized = IMAGE_FALLBACKS[assetPath];
+          if (attribute === 'src' && IMAGE_FALLBACKS[`/${assetPath}`]) normalized = IMAGE_FALLBACKS[`/${assetPath}`];
           if (attribute === 'href' && /\.html(?:[?#]|$)/i.test(value)) {
             normalized = this.angularPath(value);
+            element.setAttribute(attribute, normalized);
+            continue;
           } else if (attribute === 'href' && !/^(?:[a-z][a-z\d+.-]*:|\/|#)/i.test(value)) {
             normalized = `/legacy/${value.replace(/^\.\//, '')}`;
+          }
+          if (normalized !== value && !/^(?:[a-z][a-z\d+.-]*:|#)/i.test(normalized)) {
+            normalized = this.siteUrl(normalized);
           }
           if (normalized !== value) element.setAttribute(attribute, normalized);
         }
@@ -237,5 +242,9 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
   private angularPath(value: string): string {
     const filename = value.split(/[?#]/, 1)[0].split('/').pop() ?? '';
     return filename === 'index.html' ? '/' : `/${toSlug(filename)}`;
+  }
+
+  private siteUrl(path: string): string {
+    return new URL(path.replace(/^\/+/, ''), document.baseURI).toString();
   }
 }
