@@ -1,40 +1,18 @@
-<section class="mx-auto max-w-md px-6 py-16">
-  <a routerLink="/" class="text-sm font-semibold text-red-700">← Back to site</a>
-  <h1 class="mt-6 text-3xl font-bold">Admin sign in</h1>
-  <p class="mt-2 text-gray-600">Sign in to edit page content and manage images.</p>
-
-  <form class="mt-8 space-y-5" (ngSubmit)="submit()">
-    <label class="block text-sm font-semibold">
-      Email
-      <input
-        class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal"
-        type="email"
-        name="email"
-        [(ngModel)]="email"
-        autocomplete="username"
-        required
-      />
-    </label>
-    <label class="block text-sm font-semibold">
-      Password
-      <input
-        class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal"
-        type="password"
-        name="password"
-        [(ngModel)]="password"
-        autocomplete="current-password"
-        required
-      />
-    </label>
-    @if (error) {
-      <p class="text-sm text-red-700" role="alert">{{ error }}</p>
-    }
-    <button
-      class="w-full rounded bg-red-700 px-4 py-3 font-semibold text-white disabled:opacity-60"
-      type="submit"
-      [disabled]="submitting"
-    >
-      {{ submitting ? 'Signing in…' : 'Sign in' }}
-    </button>
-  </form>
-</section>
+<main class="login-page">
+  <div class="login-decoration login-decoration-one"></div>
+  <div class="login-decoration login-decoration-two"></div>
+  <section class="login-card" aria-labelledby="login-title">
+    <a class="login-back" routerLink="/">← Back to website</a>
+    <div class="login-logo-wrap"><img src="/legacy/assist/images/manpower-logo.png" alt="ManpowerGroup Saudi Arabia" /></div>
+    <p class="login-eyebrow">ManpowerGroup Saudi Arabia</p>
+    <h1 id="login-title">Welcome back</h1>
+    <p class="login-subtitle">Sign in to manage your website content, reports, and team access.</p>
+    <form class="login-form" (ngSubmit)="submit()">
+      <label>Email address<input type="email" name="email" [(ngModel)]="email" autocomplete="username" placeholder="you@example.com" required /></label>
+      <label>Password<div class="login-password"><input [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="password" autocomplete="current-password" placeholder="Enter your password" required /><button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }}</button></div></label>
+      @if (error) { <div class="login-error" role="alert"><span>!</span>{{ error }}</div> }
+      <button class="login-submit" type="submit" [disabled]="submitting">{{ submitting ? 'Signing in…' : 'Sign in to dashboard' }}<span>→</span></button>
+    </form>
+    <p class="login-security">Secure administration area · Authorized users only</p>
+  </section>
+</main>

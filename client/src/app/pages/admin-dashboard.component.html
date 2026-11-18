@@ -1,191 +1,25 @@
-<section class="mx-auto max-w-7xl px-6 py-10">
-  <div class="flex flex-wrap items-center justify-between gap-4">
-    <div>
-      <p class="text-sm font-semibold uppercase tracking-wide text-red-700">Content management</p>
-      <h1 class="mt-1 text-3xl font-bold">Pages</h1>
-    </div>
-    <button class="rounded border border-gray-300 px-4 py-2 font-semibold hover:bg-white" (click)="logout()">
-      Sign out
-    </button>
-  </div>
-
-  @if (currentUser) {
-    <p class="mt-2 text-sm text-gray-600">Signed in as {{ currentUser.email }} ({{ currentUser.role }})</p>
-  }
-
-  @if (message) {
-    <p class="mt-4 text-sm text-green-700" role="status">{{ message }}</p>
-  }
-  @if (error) {
-    <p class="mt-4 text-sm text-red-700" role="alert">{{ error }}</p>
-  }
-
-  <div class="mt-8 grid gap-8 lg:grid-cols-[16rem_minmax(0,1fr)]">
-    <aside class="rounded-lg border border-gray-200 bg-white p-4">
-      <h2 class="mb-3 font-bold">Site pages</h2>
-      <div class="mb-4 space-y-2 border-b border-gray-200 pb-4">
-        <input class="w-full rounded border border-gray-300 px-3 py-2 text-sm" name="newPageSlug" placeholder="new-page-slug" [(ngModel)]="newPageSlug" />
-        <input class="w-full rounded border border-gray-300 px-3 py-2 text-sm" name="newPageTitle" placeholder="Page title" [(ngModel)]="newPageTitle" />
-        <button class="w-full rounded bg-red-700 px-3 py-2 text-sm font-semibold text-white" (click)="createPage()">Create draft page</button>
-      </div>
-      <div class="space-y-1">
-        @for (page of pages; track page.slug) {
-          <button
-            class="block w-full rounded px-3 py-2 text-left text-sm hover:bg-gray-100"
-            [class.bg-red-50]="selected?.slug === page.slug"
-            [class.font-semibold]="selected?.slug === page.slug"
-            (click)="edit(page.slug)"
-          >
-            {{ page.title }}
-            @if (page.status === 'draft') {
-              <span class="ml-1 text-xs text-amber-700">(draft)</span>
-            }
-          </button>
-        }
-      </div>
-    </aside>
-
+<section class="admin-shell">
+  <header class="admin-topbar">
+    <div class="admin-brand"><div class="admin-brand-mark">M</div><div><p class="admin-eyebrow">ManpowerGroup Saudi Arabia</p><h1>Content dashboard</h1></div></div>
+    <div class="admin-account"><div class="admin-account-copy"><span>Signed in as</span><strong>{{ currentUser?.email }}</strong></div><button class="admin-button admin-button-ghost" type="button" (click)="logout()">Sign out</button></div>
+  </header>
+  <div class="admin-intro"><div><p class="admin-kicker">Administration</p><h2>Manage your website</h2><p class="admin-subtitle">Create, update, and publish content from one organized workspace.</p></div><div class="admin-stats"><div class="admin-stat"><strong>{{ pages.length }}</strong><span>Total pages</span></div><div class="admin-stat"><strong>{{ pages.length }}</strong><span>Content items</span></div><div class="admin-stat"><strong>{{ users.length || 1 }}</strong><span>Team members</span></div></div></div>
+  @if (message) { <div class="admin-alert admin-alert-success" role="status">{{ message }}</div> }
+  @if (error) { <div class="admin-alert admin-alert-error" role="alert">{{ error }}</div> }
+  <div class="admin-workspace">
+    <aside class="admin-sidebar admin-card"><div class="admin-card-heading"><div><p class="admin-kicker">Workspace</p><h2>Site pages</h2></div><span class="admin-count">{{ pages.length }}</span></div><div class="admin-create-page"><label>New page slug<input name="newPageSlug" placeholder="new-page-slug" [(ngModel)]="newPageSlug" /></label><label>Page title<input name="newPageTitle" placeholder="Page title" [(ngModel)]="newPageTitle" /></label><button class="admin-button admin-button-primary full-width" type="button" (click)="createPage()">+ Create draft page</button></div><nav class="admin-page-list" aria-label="Site pages">@for (page of pages; track page.slug) { <button class="admin-page-link" [class.is-selected]="selected?.slug === page.slug" type="button" (click)="edit(page.slug)"><span class="admin-page-name">{{ page.title }}</span><span class="admin-page-meta"><span class="admin-dot" [class.is-published]="page.status === 'published'"></span>{{ page.status }}</span></button> }</nav></aside>
     @if (selected) {
-      <div class="space-y-6 rounded-lg border border-gray-200 bg-white p-6">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <h2 class="text-xl font-bold">Edit {{ selected.slug }}</h2>
-          <label class="text-sm font-semibold">
-            Status
-            <select class="ml-2 rounded border border-gray-300 px-3 py-2" name="status" [(ngModel)]="selected.status">
-              <option value="published">Published</option>
-              <option value="draft">Draft</option>
-            </select>
-          </label>
-        </div>
-
-        <label class="block text-sm font-semibold">
-          Page title
-          <input class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" name="title" [(ngModel)]="selected.title" />
-        </label>
-
-        <fieldset class="space-y-3 rounded border border-gray-200 p-4">
-          <legend class="px-2 font-bold">Report PDF</legend>
-          <label class="block text-sm font-semibold">
-            PDF URL
-            <input class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" name="pdf" placeholder="/reports/report.pdf" [(ngModel)]="selected.pdf" />
-          </label>
-          <label class="inline-flex cursor-pointer items-center rounded border border-gray-300 px-4 py-2 text-sm font-semibold hover:bg-gray-50">
-            {{ uploading ? 'Uploading…' : 'Upload or replace PDF' }}
-            <input class="sr-only" type="file" accept="application/pdf" [disabled]="uploading" (change)="uploadPdf($event)" />
-          </label>
-          @if (selected.pdf) {
-            <a class="block text-sm text-red-700 underline" [href]="selected.pdf" target="_blank" rel="noreferrer">Open current PDF</a>
-          }
-        </fieldset>
-        <label class="block text-sm font-semibold">
-          Meta description
-          <textarea class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" rows="2" name="description" [(ngModel)]="selected.description"></textarea>
-        </label>
-
-        <fieldset class="space-y-4 rounded border border-gray-200 p-4">
-          <legend class="px-2 font-bold">Hero section</legend>
-          <label class="block text-sm font-semibold">
-            Heading
-            <input class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" name="heroHeading" [(ngModel)]="selected.hero.heading" />
-          </label>
-          <label class="block text-sm font-semibold">
-            Text
-            <textarea class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" rows="4" name="heroBody" [(ngModel)]="selected.hero.body"></textarea>
-          </label>
-          <label class="block text-sm font-semibold">
-            Image URL
-            <input class="mt-2 w-full rounded border border-gray-300 px-3 py-2 font-normal" name="heroImage" [(ngModel)]="selected.hero.image" />
-          </label>
-          <label class="inline-flex cursor-pointer items-center rounded border border-gray-300 px-4 py-2 text-sm font-semibold hover:bg-gray-50">
-            {{ uploading ? 'Uploading…' : 'Upload hero image' }}
-            <input class="sr-only" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" [disabled]="uploading" (change)="uploadImage($event)" />
-          </label>
-          @if (selected.hero.image) {
-            <img [src]="selected.hero.image" alt="Selected hero" class="max-h-48 rounded object-cover" />
-          }
-        </fieldset>
-
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold">Content sections</h3>
-            <button class="rounded border border-gray-300 px-3 py-2 text-sm font-semibold hover:bg-gray-50" (click)="addSection()">Add section</button>
-          </div>
-          @for (section of selected.sections; track $index) {
-            <fieldset class="space-y-3 rounded border border-gray-200 p-4">
-              <div class="flex items-center justify-between">
-                <legend class="font-semibold">Section {{ $index + 1 }}</legend>
-                <button class="text-sm text-red-700 hover:underline" (click)="removeSection($index)">Remove</button>
-              </div>
-              <input class="w-full rounded border border-gray-300 px-3 py-2" [name]="'sectionHeading' + $index" placeholder="Heading" [(ngModel)]="section.heading" />
-              <textarea class="w-full rounded border border-gray-300 px-3 py-2" rows="4" [name]="'sectionBody' + $index" placeholder="Text" [(ngModel)]="section.body"></textarea>
-              <input class="w-full rounded border border-gray-300 px-3 py-2" [name]="'sectionImage' + $index" placeholder="Image URL (optional)" [(ngModel)]="section.image" />
-              <label class="inline-flex cursor-pointer items-center rounded border border-gray-300 px-3 py-2 text-sm font-semibold hover:bg-gray-50">
-                Upload section image
-                <input class="sr-only" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" [disabled]="uploading" (change)="uploadImage($event, $index)" />
-              </label>
-              @if (section.image) {
-                <img [src]="section.image" alt="Section image" class="max-h-40 rounded object-cover" />
-              }
-            </fieldset>
-          }
-        </div>
-
-        <div class="flex flex-wrap gap-3">
-          <button class="rounded bg-red-700 px-5 py-3 font-semibold text-white disabled:opacity-60" [disabled]="saving || uploading" (click)="save()">
-          {{ saving ? 'Saving…' : 'Save page' }}
-          </button>
-          <button class="rounded border border-gray-300 px-4 py-3 font-semibold" (click)="deleteSelected()">Delete page</button>
-        </div>
-
-        <fieldset class="space-y-3 rounded border border-gray-200 p-4">
-          <legend class="px-2 font-bold">Duplicate page</legend>
-          <div class="grid gap-3 md:grid-cols-2">
-            <input class="rounded border border-gray-300 px-3 py-2" name="duplicateSlug" placeholder="new-page-slug" [(ngModel)]="duplicateSlug" />
-            <input class="rounded border border-gray-300 px-3 py-2" name="duplicateTitle" placeholder="New page title (optional)" [(ngModel)]="duplicateTitle" />
-          </div>
-          <button class="rounded border border-gray-300 px-4 py-2 font-semibold" (click)="duplicate()">Create duplicate draft</button>
-        </fieldset>
-      </div>
-    } @else {
-      <div class="rounded-lg border border-dashed border-gray-300 p-10 text-center text-gray-500">
-        Select a page to edit.
-      </div>
-    }
+      <main class="admin-editor admin-card"><div class="admin-editor-heading"><div><p class="admin-kicker">Page editor</p><h2>{{ selected.title }}</h2><p class="admin-muted">/{{ selected.slug }}</p></div><label class="admin-status-select">Status<select name="status" [(ngModel)]="selected.status"><option value="published">Published</option><option value="draft">Draft</option></select></label></div>
+        <div class="admin-form-grid"><label>Page title<input name="title" [(ngModel)]="selected.title" /></label><label>Meta description<textarea rows="2" name="description" [(ngModel)]="selected.description"></textarea></label></div>
+        <fieldset class="admin-section"><legend>Hero section</legend><div class="admin-form-grid"><label>Heading<input name="heroHeading" [(ngModel)]="selected.hero.heading" /></label><label>Text<textarea rows="4" name="heroBody" [(ngModel)]="selected.hero.body"></textarea></label></div><label>Image URL<input name="heroImage" [(ngModel)]="selected.hero.image" /></label><label class="admin-upload"><span>{{ uploading ? 'Uploading…' : 'Upload hero image' }}</span><input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" [disabled]="uploading" (change)="uploadImage($event)" /></label>@if (selected.hero.image) { <img [src]="selected.hero.image" alt="Selected hero" class="admin-preview" /> }</fieldset>
+        <fieldset class="admin-section"><legend>Report PDF <span class="admin-optional">Optional</span></legend><label>PDF URL<input name="pdf" placeholder="/reports/report.pdf" [(ngModel)]="selected.pdf" /></label><label class="admin-upload"><span>{{ uploading ? 'Uploading…' : 'Upload or replace PDF' }}</span><input type="file" accept="application/pdf" [disabled]="uploading" (change)="uploadPdf($event)" /></label>@if (selected.pdf) { <a class="admin-link" [href]="selected.pdf" target="_blank" rel="noreferrer">Open current PDF ↗</a> }</fieldset>
+        <div class="admin-section admin-section-plain"><div class="admin-section-heading"><div><p class="admin-kicker">Page structure</p><h3>Content sections</h3></div><button class="admin-button admin-button-secondary" type="button" (click)="addSection()">+ Add section</button></div>@for (section of selected.sections; track $index) { <fieldset class="admin-subsection"><div class="admin-subsection-heading"><legend>Section {{ $index + 1 }}</legend><button class="admin-danger-link" type="button" (click)="removeSection($index)">Remove</button></div><label>Heading<input [name]="'sectionHeading' + $index" placeholder="Section heading" [(ngModel)]="section.heading" /></label><label>Text<textarea rows="4" [name]="'sectionBody' + $index" placeholder="Section text" [(ngModel)]="section.body"></textarea></label><label>Image URL<input [name]="'sectionImage' + $index" placeholder="Image URL (optional)" [(ngModel)]="section.image" /></label><label class="admin-upload"><span>Upload section image</span><input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" [disabled]="uploading" (change)="uploadImage($event, $index)" /></label>@if (section.image) { <img [src]="section.image" alt="Section image" class="admin-preview admin-preview-small" /> }</fieldset> }@if (!selected.sections.length) { <p class="admin-empty">No content sections yet. Add one to build the page.</p> }</div>
+        <div class="admin-action-row"><button class="admin-button admin-button-primary" type="button" [disabled]="saving || uploading" (click)="save()">{{ saving ? 'Saving…' : 'Save page' }}</button><button class="admin-button admin-button-danger" type="button" (click)="deleteSelected()">Delete page</button></div>
+        <fieldset class="admin-section admin-duplicate"><legend>Duplicate page</legend><div class="admin-form-grid"><label>New page slug<input name="duplicateSlug" placeholder="new-page-slug" [(ngModel)]="duplicateSlug" /></label><label>New title <span class="admin-optional">Optional</span><input name="duplicateTitle" placeholder="New page title" [(ngModel)]="duplicateTitle" /></label></div><button class="admin-button admin-button-secondary" type="button" (click)="duplicate()">Create duplicate draft</button></fieldset>
+      </main>
+    } @else { <main class="admin-card admin-empty-state"><div class="admin-empty-icon">✦</div><h2>Select a page to edit</h2><p>Choose a page from the workspace to start editing its content.</p></main> }
   </div>
-
-  <div class="mt-8 grid gap-8 lg:grid-cols-2">
-    <fieldset class="rounded-lg border border-gray-200 bg-white p-6">
-      <legend class="px-2 text-lg font-bold">Change my password</legend>
-      <div class="space-y-3">
-        <input class="w-full rounded border border-gray-300 px-3 py-2" type="password" name="currentPassword" placeholder="Current password" [(ngModel)]="currentPassword" />
-        <input class="w-full rounded border border-gray-300 px-3 py-2" type="password" name="newPassword" placeholder="New password (12+ characters)" [(ngModel)]="newPassword" />
-        <button class="rounded bg-red-700 px-4 py-2 font-semibold text-white" (click)="changePassword()">Change password</button>
-      </div>
-    </fieldset>
-
-    @if (currentUser?.role === 'super-admin') {
-      <fieldset class="rounded-lg border border-gray-200 bg-white p-6">
-        <legend class="px-2 text-lg font-bold">CMS users</legend>
-        <div class="space-y-3">
-          <input class="w-full rounded border border-gray-300 px-3 py-2" type="email" name="newUserEmail" placeholder="user@example.com" [(ngModel)]="newUserEmail" />
-          <input class="w-full rounded border border-gray-300 px-3 py-2" type="password" name="newUserPassword" placeholder="Temporary password (12+ characters)" [(ngModel)]="newUserPassword" />
-          <select class="w-full rounded border border-gray-300 px-3 py-2" name="newUserRole" [(ngModel)]="newUserRole">
-            <option value="editor">Editor</option>
-            <option value="super-admin">Super admin</option>
-          </select>
-          <button class="rounded bg-red-700 px-4 py-2 font-semibold text-white" (click)="addUser()">Add CMS user</button>
-        </div>
-        <div class="mt-5 space-y-2">
-          @for (user of users; track user.email) {
-            <div class="flex items-center justify-between rounded border border-gray-100 px-3 py-2 text-sm">
-              <span>{{ user.email }} <span class="text-gray-500">({{ user.role }})</span></span>
-              @if (user.email !== currentUser?.email) {
-                <button class="text-red-700 hover:underline" (click)="removeUser(user)">Remove</button>
-              }
-            </div>
-          }
-        </div>
-      </fieldset>
-    }
-  </div>
+  <section class="admin-settings-grid"><div class="admin-card admin-settings-card"><div class="admin-card-heading"><div><p class="admin-kicker">Security</p><h2>Change my password</h2></div><span class="admin-icon-badge">✓</span></div><p class="admin-muted">Use a unique password with at least 12 characters.</p><div class="admin-form-stack"><label>Current password<div class="admin-password"><input [type]="showCurrentPassword ? 'text' : 'password'" name="currentPassword" autocomplete="current-password" placeholder="Enter current password" [(ngModel)]="currentPassword" /><button type="button" (click)="showCurrentPassword = !showCurrentPassword">{{ showCurrentPassword ? 'Hide' : 'Show' }}</button></div></label><label>New password<div class="admin-password"><input [type]="showNewPassword ? 'text' : 'password'" name="newPassword" autocomplete="new-password" placeholder="12+ characters" [(ngModel)]="newPassword" /><button type="button" (click)="showNewPassword = !showNewPassword">{{ showNewPassword ? 'Hide' : 'Show' }}</button></div></label><button class="admin-button admin-button-primary" type="button" (click)="changePassword()">Update password</button></div></div>
+    @if (currentUser?.role === 'super-admin') { <div class="admin-card admin-settings-card"><div class="admin-card-heading"><div><p class="admin-kicker">Access control</p><h2>CMS users</h2></div><span class="admin-count">{{ users.length }}</span></div><p class="admin-muted">Add teammates and choose the access they need.</p><div class="admin-form-stack"><label>Email address<input type="email" name="newUserEmail" autocomplete="off" placeholder="user@example.com" [(ngModel)]="newUserEmail" /></label><label>Temporary password<div class="admin-password"><input [type]="showUserPassword ? 'text' : 'password'" name="newUserPassword" autocomplete="new-password" placeholder="12+ characters" [(ngModel)]="newUserPassword" /><button type="button" (click)="showUserPassword = !showUserPassword">{{ showUserPassword ? 'Hide' : 'Show' }}</button></div></label><label>Role<select name="newUserRole" [(ngModel)]="newUserRole"><option value="editor">Editor — manage content</option><option value="super-admin">Super admin — full access</option></select></label><button class="admin-button admin-button-primary" type="button" (click)="addUser()">+ Add CMS user</button></div><div class="admin-user-list">@for (user of users; track user.email) { <div class="admin-user-row"><div class="admin-user-avatar">{{ user.email.charAt(0).toUpperCase() }}</div><div class="admin-user-info"><strong>{{ user.email }}</strong><span>{{ user.role }}</span></div>@if (user.email !== currentUser?.email) { <button class="admin-danger-link" type="button" (click)="removeUser(user)">Remove</button> }</div> }</div></div> }
+  </section>
 </section>

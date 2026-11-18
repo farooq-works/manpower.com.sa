@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { randomUUID } from 'node:crypto';
-import { mkdir, readdir, unlink, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import cookieParser from 'cookie-parser';
@@ -28,6 +28,8 @@ const projectDirectory = path.resolve(serverDirectory, '..');
 const uploadsDirectory = path.join(serverDirectory, 'uploads');
 const publicImagesDirectory = path.join(projectDirectory, 'wwwroot', 'assist', 'images');
 const reportsDirectory = path.join(projectDirectory, 'wwwroot', 'reports');
+const contactSubmissionsFile = path.join(serverDirectory, 'data', 'contact-submissions.json');
+const contactRecipient = process.env.CONTACT_RECIPIENT_EMAIL ?? 'mohammadfarooq.works@gmail.com';
 const secret = process.env.JWT_SECRET;
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -57,6 +59,30 @@ const requireSuperAdmin = (req, res, next) => {
 };
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
+
+app.post('/api/contact', async (req, res, next) => {
+  try {
+    const { firstName, lastName, email, phone, company, message } = req.body ?? {};
+    if ([firstName, lastName, email, phone, company, message].some((value) => typeof value !== 'string' || !value.trim())) {
+      return res.status(400).json({ error: 'Please complete all contact form fields' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || message.length > 2000) {
+      return res.status(400).json({ error: 'Provide a valid email and message' });
+    }
+    let submissions = [];
+    try {
+      submissions = JSON.parse(await readFile(contactSubmissionsFile, 'utf8'));
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
+    submissions.push({ id: randomUUID(), receivedAt: new Date().toISOString(), recipient: contactRecipient, firstName: firstName.trim(), lastName: lastName.trim(), email: email.trim().toLowerCase(), phone: phone.trim(), company: company.trim(), message: message.trim() });
+    await mkdir(path.dirname(contactSubmissionsFile), { recursive: true });
+    await writeFile(contactSubmissionsFile, `${JSON.stringify(submissions, null, 2)}\n`, { flag: 'w' });
+    return res.status(200).json({ message: 'Thank you! Your message has been received.' });
+  } catch (error) {
+    return next(error);
+  }
+});
 
 app.post('/api/auth/login', loginLimiter, async (req, res, next) => {
   try {

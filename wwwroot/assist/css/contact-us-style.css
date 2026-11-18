@@ -35,6 +35,10 @@
     color: #c25700;
 }
 
+/* Keep contact icons visible if the remote Font Awesome stylesheet is unavailable. */
+.et_pb_blurb_0 .fa-envelope::before { content: "✉"; font-family: Arial, sans-serif; }
+.et_pb_blurb_1 .fa-phone::before { content: "☎"; font-family: Arial, sans-serif; }
+
 	/* ----------footer css------ */
 
 	.wpcf7 label {

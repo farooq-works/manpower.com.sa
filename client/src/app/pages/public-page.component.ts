@@ -3,6 +3,7 @@ import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnDestroy, 
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
+import { SitePage } from '../models/page';
 
 const PAGE_FILES: Record<string, string> = {
   home: 'index.html',
@@ -69,8 +70,10 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
 
   loading = true;
   notFound = false;
+  draft = false;
   loadError = '';
   markup = '';
+  private cmsPage: SitePage | null = null;
   private renderedMarkup = '';
 
   constructor() {
@@ -81,8 +84,17 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
         const filename = PAGE_FILES[slug] ?? `${slug}.html`;
         this.loading = true;
         this.notFound = false;
+        this.draft = false;
         this.loadError = '';
-        return this.http.get(this.siteUrl(`legacy/${encodeURIComponent(filename)}`), { responseType: 'text' }).pipe(
+        return this.http.get<SitePage>(`/api/pages/${encodeURIComponent(slug)}`).pipe(
+          switchMap((page) => {
+            this.cmsPage = page;
+            if (page.status === 'draft') {
+              this.draft = true;
+              return of('');
+            }
+            return this.http.get(this.siteUrl(`legacy/${encodeURIComponent(filename)}`), { responseType: 'text' });
+          }),
           catchError((error: { status?: number }) => {
             if (error.status === 404) this.notFound = true;
             else this.loadError = 'Unable to load this page. Please try again later.';
@@ -181,6 +193,7 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
       this.injectedStyles.push(style);
     }
     host.innerHTML = this.markup;
+    this.appendStructuredContentIfMissing();
     this.renderedMarkup = this.markup;
     this.legacyHost = host;
     this.initializeFaqState();
@@ -188,6 +201,31 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
     host.addEventListener('click', this.handleFaqClick);
     document.body.className = this.bodyClass;
     void this.loadScripts();
+  }
+
+  private appendStructuredContentIfMissing(): void {
+    const page = this.cmsPage;
+    const host = this.legacyHost ?? this.legacyContent?.nativeElement;
+    if (!page?.sections.length || !host) return;
+    const existing = host.textContent ?? '';
+    const importantHeading = page.sections.flatMap((section) => section.body.match(/Key (?:Findings|Insights)/g) ?? [])[0];
+    if (!importantHeading || existing.includes(importantHeading)) return;
+
+    const wrapper = document.createElement('section');
+    wrapper.className = 'cms-structured-content';
+    for (const section of page.sections) {
+      if (section.heading) {
+        const heading = document.createElement('h2');
+        heading.textContent = section.heading;
+        wrapper.append(heading);
+      }
+      for (const paragraph of section.body.split(/\n\s*\n/).map((value) => value.trim()).filter(Boolean)) {
+        const element = document.createElement(/^Key (?:Findings|Insights):?$/i.test(paragraph) ? 'h3' : 'p');
+        element.textContent = paragraph;
+        wrapper.append(element);
+      }
+    }
+    host.append(wrapper);
   }
 
   private async loadScripts(): Promise<void> {

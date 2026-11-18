@@ -2,6 +2,7 @@ node_modules/
 dist/
 .env
 server/data/users.json
+server/data/contact-submissions.json
 server/uploads/
 client/.angular/
 client/coverage/

@@ -1,0 +1,35 @@
+{
+  "slug": "about-us",
+  "title": "About us",
+  "description": "Pioneering job matches",
+  "status": "published",
+  "hero": {
+    "heading": "Pioneering job matches",
+    "body": "People form the lifeblood of every organization. So, investing in your employees isn’t just good practice, but a strategic advantage that can steer your business to success.khk4545455",
+    "image": "/media/Office-Image2.png"
+  },
+  "pdf": "/reports/cf440b24-15f1-484b-b3c8-8f9e57057129.pdf",
+  "sections": [
+    {
+      "heading": "Hire Your Team From Over 80 Countries",
+      "body": "Manpower Saudi Arabia will connect you with the top talents from around the world, helping you expand and establish your presence beyond borders. Navigate local regulations and other operational activities with ease even without having a local establishment.",
+      "image": "/media/Office-Image2.png"
+    },
+    {
+      "heading": "About Manpower Saudi Arabia",
+      "body": "Milestone for any organization, it signals momentum, opportunity, and ambition. In Saudi Arabia’s rapidly transforming economy, however, growth also brings complexity. As organizations scale, leaders are often faced with critical workforce decisions that can directly impact performance, compliance, and sustainability. You may find yourself asking: You secure new projects or contracts and need to scale your workforce quickly. Do you hire permanent employees, engage flexible talent, or outsource specific functions? Labor regulations and compliance requirements continue to evolve. How do you ensure alignment with Saudi employment laws while avoiding operational and legal risk? High-performing employees are increasingly in demand, How do you strengthen your retention strategies, benefits, and employee value proposition to remain competitive? At Manpower Saudi Arabia, we help organizations navigate these challenges with confidence, combining global workforce expertise with deep local market understanding to support sustainable growth in the Kingdom.\n\nIn times of uncertainty and transformation, Manpower Saudi Arabia delivers workforce solutions you can depend on. As the licensed operator of the Manpower® brand in the Kingdom of Saudi Arabia, we bring together global expertise and deep local market insight to support organizations across sectors. Drawing on ManpowerGroup’s global understanding of industry-specific skill demands and workforce trends, our consultants are equipped to manage the complexities of people, processes, and compliance in periods of change. We apply proven, practical strategies to help organizations remain resilient, agile, and prepared for what comes next. Partnering with Manpower Saudi Arabia means more than outsourcing HR functions. You gain access to a global network of workforce specialists who work as an extension of your internal teams, supporting employee engagement, operational continuity, and long-term workforce sustainability. Our strategic approach ensures that every solution contributes to stable growth and lasting performance in the Saudi market.",
+      "image": "/media/About-Manpower.png"
+    },
+    {
+      "heading": "How We Get You Results",
+      "body": "Whether you’re looking for a temporary role or a permanent position, Manpower offers a wide range of opportunities so you can find the one that perfectly matches your preferences.\n\nOur staffing solutions ensure optimal job matches while fostering employee productivity, growth and alignment with your company objectives.",
+      "image": "/media/Efficiency-team.png"
+    },
+    {
+      "heading": "Searching for the right talent?",
+      "body": "In a diverse talent landscape, pinpointing the ideal candidate can be a challenge. With Manpower, it becomes a seamless endeavor. Drawing from our rich legacy, we understand the specific nuances of your hiring needs.",
+      "image": ""
+    }
+  ],
+  "updatedAt": "2026-11-18T08:09:14.359Z"
+}

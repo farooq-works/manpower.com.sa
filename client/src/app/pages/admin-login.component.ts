@@ -6,6 +6,7 @@ import { AuthService } from '../core/auth.service';
 @Component({
   selector: 'app-admin-login',
   imports: [FormsModule, RouterLink],
+  styleUrl: './admin-login.component.css',
   templateUrl: './admin-login.component.html',
 })
 export class AdminLoginComponent {
@@ -17,8 +18,13 @@ export class AdminLoginComponent {
   password = '';
   error = '';
   submitting = false;
+  showPassword = false;
 
   submit(): void {
+    if (!this.email.trim() || !this.password) {
+      this.error = 'Enter your email and password to continue.';
+      return;
+    }
     this.error = '';
     this.submitting = true;
     this.auth.login(this.email, this.password).subscribe({

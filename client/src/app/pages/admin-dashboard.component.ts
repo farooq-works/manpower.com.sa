@@ -9,6 +9,7 @@ import { AdminUser, ManagedUser, SitePage, UploadedMedia } from '../models/page'
 @Component({
   selector: 'app-admin-dashboard',
   imports: [FormsModule],
+  styleUrl: '../app.css',
   templateUrl: './admin-dashboard.component.html',
 })
 export class AdminDashboardComponent implements OnInit {
@@ -34,6 +35,9 @@ export class AdminDashboardComponent implements OnInit {
   duplicateTitle = '';
   currentPassword = '';
   newPassword = '';
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showUserPassword = false;
 
   ngOnInit(): void {
     this.auth.me().subscribe({
@@ -186,15 +190,29 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   changePassword(): void {
+    if (!this.currentPassword || this.newPassword.length < 12) {
+      this.error = 'Enter your current password and a new password with at least 12 characters.';
+      this.message = '';
+      return;
+    }
+    this.error = '';
+    this.message = '';
     this.auth.changePassword(this.currentPassword, this.newPassword).subscribe({
-      next: () => { this.currentPassword = ''; this.newPassword = ''; this.message = 'Your password was changed.'; this.changeDetector.markForCheck(); },
+      next: () => { this.currentPassword = ''; this.newPassword = ''; this.showCurrentPassword = false; this.showNewPassword = false; this.message = 'Your password was changed.'; this.changeDetector.markForCheck(); },
       error: (error: HttpErrorResponse) => { this.error = error.error?.error ?? 'Password could not be changed.'; this.changeDetector.markForCheck(); },
     });
   }
 
   addUser(): void {
+    if (!this.newUserEmail.trim() || this.newUserPassword.length < 12) {
+      this.error = 'Enter a valid email and a temporary password with at least 12 characters.';
+      this.message = '';
+      return;
+    }
+    this.error = '';
+    this.message = '';
     this.api.createUser(this.newUserEmail, this.newUserPassword, this.newUserRole).subscribe({
-      next: (user) => { this.users = [...this.users, user].sort((left, right) => left.email.localeCompare(right.email)); this.newUserEmail = ''; this.newUserPassword = ''; this.message = 'User added.'; this.changeDetector.markForCheck(); },
+      next: (user) => { this.users = [...this.users, user].sort((left, right) => left.email.localeCompare(right.email)); this.newUserEmail = ''; this.newUserPassword = ''; this.showUserPassword = false; this.message = 'User added.'; this.changeDetector.markForCheck(); },
       error: (error: HttpErrorResponse) => { this.error = error.error?.error ?? 'User could not be added.'; this.changeDetector.markForCheck(); },
     });
   }
