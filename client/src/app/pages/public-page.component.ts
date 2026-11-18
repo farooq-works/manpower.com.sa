@@ -133,6 +133,15 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
         for (const attribute of ['src', 'href', 'srcset']) {
           const value = element.getAttribute(attribute);
           if (!value) continue;
+          if (attribute === 'srcset') {
+            const normalizedSrcset = value.split(',').map((candidate) => {
+              const [source, ...descriptors] = candidate.trim().split(/\s+/);
+              const normalizedSource = this.normalizeAssetPath(source);
+              return [normalizedSource, ...descriptors].join(' ');
+            }).join(', ');
+            if (normalizedSrcset !== value) element.setAttribute(attribute, normalizedSrcset);
+            continue;
+          }
           const assetPath = value.startsWith('./assist/') ? `legacy/${value.slice(2)}` : value.startsWith('assist/') ? `legacy/${value}` : value;
           let normalized = assetPath
             .replaceAll('/2026-Global-Talent-Survey.avif', '/2026-Global-Talent-Survey.jpg')
@@ -284,5 +293,14 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
 
   private siteUrl(path: string): string {
     return new URL(path.replace(/^\/+/, ''), document.baseURI).toString();
+  }
+
+  private normalizeAssetPath(value: string): string {
+    const assetPath = value.startsWith('./assist/') ? `legacy/${value.slice(2)}` : value.startsWith('assist/') ? `legacy/${value}` : value;
+    let normalized = assetPath
+      .replaceAll('/2026-Global-Talent-Survey.avif', '/2026-Global-Talent-Survey.jpg')
+      .replaceAll('/The-Human-Edge-1080x675.png.avif', '/The-Human-Edge-1080x675.jpg');
+    if (normalized !== value && !/^(?:[a-z][a-z\d+.-]*:|#)/i.test(normalized)) normalized = this.siteUrl(normalized);
+    return normalized;
   }
 }
