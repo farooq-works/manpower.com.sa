@@ -5,6 +5,7 @@ import { AuthService } from '../core/auth.service';
 import { PageApi } from '../core/page-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AdminUser, ManagedUser, SitePage, UploadedMedia } from '../models/page';
+import { PAGE_DEFINITION_MAP } from '../content/page-registry';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -38,6 +39,14 @@ export class AdminDashboardComponent implements OnInit {
   showCurrentPassword = false;
   showNewPassword = false;
   showUserPassword = false;
+
+  templateFor(slug: string): string {
+    return PAGE_DEFINITION_MAP.get(slug)?.template ?? 'custom';
+  }
+
+  preview(slug: string): void {
+    window.open(slug === 'home' ? '/' : `/${slug}`, '_blank', 'noopener,noreferrer');
+  }
 
   ngOnInit(): void {
     this.auth.me().subscribe({

@@ -9,6 +9,17 @@ const revisionsDirectory = path.join(serverDirectory, 'data', 'revisions');
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 let writes = Promise.resolve();
 
+function hydratePage(page) {
+  return {
+    ...page,
+    sections: (page.sections ?? []).map((section, index) => ({
+      ...section,
+      id: section.id ?? `section-${index + 1}`,
+      sourceHeading: section.sourceHeading ?? section.heading,
+    })),
+  };
+}
+
 export function isValidSlug(slug) {
   return typeof slug === 'string' && slugPattern.test(slug);
 }
@@ -38,7 +49,7 @@ export function validatePage(slug, input) {
     throw new Error('Invalid page sections');
   }
 
-  const sections = input.sections.map((section) => {
+  const sections = input.sections.map((section, index) => {
     if (!section || typeof section !== 'object' || Array.isArray(section)) {
       throw new Error('Invalid page section');
     }
@@ -48,8 +59,11 @@ export function validatePage(slug, input) {
       throw new Error('Invalid section image');
     }
 
+    const heading = assertText(section.heading, 'section heading', 160, true);
     return {
-      heading: assertText(section.heading, 'section heading', 160, true),
+      id: assertText(section.id ?? `section-${index + 1}`, 'section id', 80),
+      sourceHeading: assertText(section.sourceHeading ?? heading, 'section source heading', 160, true),
+      heading,
       body: assertText(section.body, 'section body', 12000, true),
       image,
     };
@@ -122,7 +136,7 @@ export async function listPages({ includeDrafts = false } = {}) {
   const pages = await Promise.all(
     filenames.filter((name) => name.endsWith('.json')).map((name) => readJson(path.join(pagesDirectory, name))),
   );
-  return pages
+  return pages.map(hydratePage)
     .filter((page) => includeDrafts || page.status === 'published')
     .sort((left, right) => left.title.localeCompare(right.title));
 }
@@ -132,7 +146,7 @@ export async function getPage(slug, { includeDraft = false } = {}) {
 
   try {
     const page = await readJson(path.join(pagesDirectory, `${slug}.json`));
-    return includeDraft || page.status === 'published' ? page : null;
+    return includeDraft || page.status === 'published' ? hydratePage(page) : null;
   } catch (error) {
     if (error.code === 'ENOENT') return null;
     throw error;

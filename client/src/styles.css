@@ -81,3 +81,7 @@ select {
 .cms-draft-message a { color:#c8102e; font-weight:700; text-decoration:underline; }
 .cms-structured-content { max-width:900px; margin:3rem auto; padding:2rem; border-radius:16px; background:#fff; box-shadow:0 8px 28px rgb(20 30 50 / 8%); }
 .cms-structured-content h2 { margin:0 0 1.25rem; color:#c8102e; }.cms-structured-content h3 { margin:1.5rem 0 .5rem; color:#c8102e; }.cms-structured-content p { margin:.75rem 0; line-height:1.75; }
+
+/* Typed Angular CMS editor controls. */
+.admin-editor-tools { display:flex; align-items:flex-end; gap:12px; }
+@media (max-width:600px) { .admin-editor-tools { align-items:stretch; flex-direction:column; width:100%; } }

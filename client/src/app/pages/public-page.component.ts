@@ -4,12 +4,7 @@ import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
 import { SitePage } from '../models/page';
-
-const PAGE_FILES: Record<string, string> = {
-  home: 'index.html',
-  'healthcare-and-life-sciences-world-of-work-outlook': 'Healthcare-&-Life-Sciences-World-of-Work-Outlook.html',
-  'index-bp': 'index=bp.html',
-};
+import { PAGE_DEFINITION_MAP } from '../content/page-registry';
 
 const IMAGE_FALLBACKS: Record<string, string> = {
   '/legacy/assist/images/2026-Global-Talent-Survey.avif': '/legacy/assist/images/2026-Global-Talent-Survey.jpg?v=2',
@@ -81,7 +76,7 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
       switchMap((params) => {
         const routeSlug = params.get('slug') ?? (this.route.snapshot.data['slug'] as string | undefined) ?? 'home';
         const slug = toSlug(routeSlug);
-        const filename = PAGE_FILES[slug] ?? `${slug}.html`;
+        const filename = PAGE_DEFINITION_MAP.get(slug)?.sourceFile ?? `${slug}.html`;
         this.loading = true;
         this.notFound = false;
         this.draft = false;
@@ -163,8 +158,8 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
 
       this.markup = parsed.body.innerHTML;
       this.renderedMarkup = '';
-      this.title.setTitle(parsed.title || 'Manpower Saudi Arabia');
-      const description = parsed.querySelector('meta[name="description"]')?.getAttribute('content');
+      this.title.setTitle(this.cmsPage?.title || parsed.title || 'Manpower Saudi Arabia');
+      const description = this.cmsPage?.description || parsed.querySelector('meta[name="description"]')?.getAttribute('content');
       if (description) this.meta.updateTag({ name: 'description', content: description });
       this.changeDetector.detectChanges();
       this.renderLegacyPage();
@@ -203,6 +198,7 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
     }
     host.innerHTML = this.markup;
     this.appendStructuredContentIfMissing();
+    this.applyCmsContent();
     this.renderedMarkup = this.markup;
     this.legacyHost = host;
     this.initializeFaqState();
@@ -235,6 +231,51 @@ export class PublicPageComponent implements AfterViewChecked, OnDestroy {
       }
     }
     host.append(wrapper);
+  }
+
+  private applyCmsContent(): void {
+    const page = this.cmsPage;
+    const host = this.legacyHost ?? this.legacyContent?.nativeElement;
+    if (!page || !host) return;
+
+    const contentRoot = host.querySelector<HTMLElement>('article') ?? host;
+    const heroHeading = contentRoot.querySelector<HTMLElement>('h1');
+    if (heroHeading) {
+      heroHeading.textContent = page.hero.heading;
+      const heroContainer = heroHeading.closest<HTMLElement>('.et_pb_column, .et_pb_row, section, article') ?? heroHeading.parentElement;
+      const heroParagraph = heroContainer?.querySelector<HTMLElement>('p');
+      if (heroParagraph && page.hero.body) heroParagraph.textContent = page.hero.body;
+      this.updateFirstImage(heroContainer, page.hero.image);
+    }
+
+    for (const section of page.sections) {
+      const sourceHeading = this.normalizeText(section.sourceHeading || section.heading);
+      if (!sourceHeading) continue;
+      const heading = [...contentRoot.querySelectorAll<HTMLElement>('h1,h2,h3,h4,h5,h6')]
+        .find((candidate) => this.normalizeText(candidate.textContent ?? '') === sourceHeading);
+      if (!heading) continue;
+      heading.textContent = section.heading;
+      const sectionContainer = heading.closest<HTMLElement>('.et_pb_text_inner') ?? heading.parentElement;
+      if (!sectionContainer) continue;
+      const paragraphs = [...sectionContainer.querySelectorAll<HTMLParagraphElement>(':scope > p')];
+      const bodyParts = section.body.split(/\n\s*\n/).map((part) => part.trim()).filter(Boolean);
+      if (bodyParts.length && paragraphs.length) {
+        bodyParts.forEach((part, index) => {
+          if (paragraphs[index]) paragraphs[index].textContent = part;
+        });
+      }
+      this.updateFirstImage(heading.closest<HTMLElement>('.et_pb_row, section, article') ?? sectionContainer, section.image);
+    }
+  }
+
+  private updateFirstImage(container: HTMLElement | null | undefined, image: string): void {
+    if (!container || !image) return;
+    const imageElement = container.querySelector<HTMLImageElement>('img');
+    if (imageElement) imageElement.src = image.startsWith('/') ? this.siteUrl(image) : image;
+  }
+
+  private normalizeText(value: string): string {
+    return value.replace(/\s+/g, ' ').trim().toLowerCase();
   }
 
   private async loadScripts(): Promise<void> {

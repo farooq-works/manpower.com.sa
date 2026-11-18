@@ -1,4 +1,6 @@
 export interface PageSection {
+  id?: string;
+  sourceHeading?: string;
   heading: string;
   body: string;
   image: string;
